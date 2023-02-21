@@ -1,7 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
+import App from "./app/App";
+// import Slider from "./slider";
 import reportWebVitals from "./reportWebVitals";
+
+import "./swiper.scss";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
