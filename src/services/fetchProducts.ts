@@ -1,6 +1,6 @@
 import generateUniqueRandomNumbers from "./generateUniqueRandomNumbers";
 
-export enum Filter {
+export enum ProductFilter {
     ALL = "all",
     WITHOUTDISCOUNT = "withoutDiscount",
     WITHDISCOUNT = "withDiscount",
@@ -44,34 +44,34 @@ export type Products = IProduct[];
 const fetchProducts = async (
     url: string,
     quantity: number = 1,
-    filter: Filter = Filter.ALL
+    filter: ProductFilter = ProductFilter.ALL
 ) => {
     if (quantity < 1) {
         console.error(`quantity < 1 \n${quantity}`);
         quantity = 1;
     }
     if (
-        filter !== Filter.ALL &&
-        filter !== Filter.WITHOUTDISCOUNT &&
-        filter !== Filter.WITHDISCOUNT
+        filter !== ProductFilter.ALL &&
+        filter !== ProductFilter.WITHOUTDISCOUNT &&
+        filter !== ProductFilter.WITHDISCOUNT
     ) {
         console.warn(
             `fetchProducts wrong argument. filter should be equal to: 'all' - default value | 'withoutDiscount' | 'withDiscount') \n filter=${filter}`
         );
-        filter = Filter.ALL;
+        filter = ProductFilter.ALL;
     }
     try {
         let response = await fetch(url);
         let productData: Products = await response.json();
-        if (filter !== Filter.ALL) {
-            if (filter === Filter.WITHDISCOUNT) {
+        if (filter !== ProductFilter.ALL) {
+            if (filter === ProductFilter.WITHDISCOUNT) {
                 productData = productData.filter((item) => {
                     if (item.discount !== "0") {
                         return item;
                     }
                     return false;
                 });
-            } else if (filter === Filter.WITHOUTDISCOUNT) {
+            } else if (filter === ProductFilter.WITHOUTDISCOUNT) {
                 productData = productData.filter((item) => {
                     if (item.discount === "0") {
                         return item;

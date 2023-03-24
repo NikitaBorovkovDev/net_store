@@ -2,19 +2,17 @@ import clsx from "clsx";
 import addProductToLocalStorage from "../../services/addProductToLocalStorage";
 import ButtonSolid from "../buttonSolid/buttonSolid";
 import "./productCard.scss";
+import {IProduct} from "../../services/fetchProducts";
 
-export const smallCard = () => "small";
+export enum CardType {
+    SMALL = "small",
+    LARGE = "large",
+}
 
-export const largeCard = () => "large";
-
-const ProductCard = (product, cardType = "small") => {
-    cardType = cardType.toLocaleLowerCase();
-    if (cardType !== "small" && cardType !== "large") {
-        console.warn(
-            `cardType prop can only be "small" or "large" \n cardType="${cardType}"`
-        );
-        cardType = "small";
-    }
+const ProductCard = (
+    product: IProduct,
+    cardType: CardType = CardType.SMALL
+) => {
     let price = (
         <div className="product-card__price-container">
             <div
@@ -26,11 +24,7 @@ const ProductCard = (product, cardType = "small") => {
             </div>
         </div>
     );
-    if (
-        product.discount !== "0" &&
-        product.discount !== 0 &&
-        product.discount
-    ) {
+    if (product.discount !== "0" && product.discount) {
         price = (
             <div className="product-card__price-container">
                 <div

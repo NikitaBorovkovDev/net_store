@@ -6,9 +6,10 @@ import "swiper/css";
 import "./specialOffers.scss";
 
 const SpecialOffers = () => {
-    const a2 = (swiper) => {
+    const calcWidth = (swiper: any) => {
+        console.log(swiper);
         let sliderWidth = 0;
-        swiper.slides.forEach((slide) => {
+        swiper.slides.forEach((slide: any) => {
             if (
                 slide.querySelector("span").getBoundingClientRect().width >
                 sliderWidth
@@ -27,11 +28,11 @@ const SpecialOffers = () => {
                 modules={[Navigation, A11y]}
                 navigation
                 simulateTouch={false}
-                onSwiper={(swiper) => {
-                    a2(swiper);
+                onSwiper={(swiper: any) => {
+                    calcWidth(swiper);
                 }}
-                onSlideChange={(swiper) => {
-                    a2(swiper);
+                onSlideChange={(swiper: any) => {
+                    calcWidth(swiper);
                 }}>
                 <SwiperSlide>
                     <span className="_slide-content extrasmall-bold">

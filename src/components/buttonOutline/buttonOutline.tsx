@@ -2,7 +2,6 @@ import PropTypes from "prop-types";
 import clsx from "clsx";
 
 import "./buttonOutline.scss";
-import React from "react";
 
 type Props = {
     children: string | JSX.Element;

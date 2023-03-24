@@ -13,19 +13,19 @@ import "swiper/css";
 import "./heroSlider.scss";
 import {useEffect, useState, useRef} from "react";
 import Spinner from "../spinner/spinner";
-import {JsxElement} from "typescript";
+import {URL_HERO_SLIDER_CONTENT} from "../../usedUrls";
 
 const HeroSlider = () => {
     const swiperRef = useRef<HTMLDivElement>(null);
-    const paginationRef = useRef(null);
+    const paginationRef = useRef<HTMLDivElement>(null);
 
     const [colorAnalysisInProgress, setColorAnalysisInProgress] =
         useState(true);
-    const [slides, setSlides] = useState<JsxElement[]>([]);
+    const [slides, setSlides] = useState<(JSX.Element | null)[] | null>([]);
 
-    const setPaginationColor = (color) => {
-        paginationRef.current
-            .querySelectorAll(".swiper-pagination-bullet")
+    const setPaginationColor = (color: string) => {
+        paginationRef?.current
+            ?.querySelectorAll(".swiper-pagination-bullet")
             .forEach((bullet) => {
                 bullet.classList.remove(
                     color === "white"
@@ -136,8 +136,22 @@ const HeroSlider = () => {
 export default HeroSlider;
 
 const renderSlides = async () => {
+    interface ISliderContent {
+        subheading?: string;
+        heading?: string;
+        background?: {
+            image?: string;
+            color?: string;
+        };
+    }
+
+    const fetchingData = await fetch(URL_HERO_SLIDER_CONTENT);
+    const sliderContent: ISliderContent[] = await fetchingData.json();
     const slidesArr = await Promise.all(
-        sliderContentArr.map(async (slide, index) => {
+        sliderContent.map(async (slide, index) => {
+            if (Object.keys(slide).length === 0 || !slide) {
+                return null;
+            }
             let bgColor = "";
             let backgroundImage = "";
             if (slide.background?.image) {
