@@ -1,10 +1,26 @@
 import generateUniqueRandomNumbers from "./generateUniqueRandomNumbers";
-export var Filter;
-(function (Filter) {
-    Filter["ALL"] = "all";
-    Filter["WITHOUTDISCOUNT"] = "withoutDiscount";
-    Filter["WITHDISCOUNT"] = "withDiscount";
-})(Filter || (Filter = {}));
+
+export enum Filter {
+    ALL = "all",
+    WITHOUTDISCOUNT = "withoutDiscount",
+    WITHDISCOUNT = "withDiscount",
+}
+
+export interface IProduct {
+    id: string;
+    name: string;
+    type: string;
+    imageAndVideo: {url: string}[];
+    basePrice: string;
+    currentPrice: string;
+    discount: string;
+    size: string;
+    color: string;
+    rating: string;
+}
+
+export type Products = IProduct[];
+
 // const Products: IProduct = {
 //     id: "1",
 //     name: "1",
@@ -24,20 +40,29 @@ export var Filter;
 //     color: "pink, blue, yellow",
 //     rating: "4.13",
 // };
-const fetchProducts = async (url, quantity = 1, filter = Filter.ALL) => {
+
+const fetchProducts = async (
+    url: string,
+    quantity: number = 1,
+    filter: Filter = Filter.ALL
+) => {
     if (quantity < 1) {
         console.error(`quantity < 1 \n${quantity}`);
         quantity = 1;
     }
-    if (filter !== Filter.ALL &&
+    if (
+        filter !== Filter.ALL &&
         filter !== Filter.WITHOUTDISCOUNT &&
-        filter !== Filter.WITHDISCOUNT) {
-        console.warn(`fetchProducts wrong argument. filter should be equal to: 'all' - default value | 'withoutDiscount' | 'withDiscount') \n filter=${filter}`);
+        filter !== Filter.WITHDISCOUNT
+    ) {
+        console.warn(
+            `fetchProducts wrong argument. filter should be equal to: 'all' - default value | 'withoutDiscount' | 'withDiscount') \n filter=${filter}`
+        );
         filter = Filter.ALL;
     }
     try {
         let response = await fetch(url);
-        let productData = await response.json();
+        let productData: Products = await response.json();
         if (filter !== Filter.ALL) {
             if (filter === Filter.WITHDISCOUNT) {
                 productData = productData.filter((item) => {
@@ -46,8 +71,7 @@ const fetchProducts = async (url, quantity = 1, filter = Filter.ALL) => {
                     }
                     return false;
                 });
-            }
-            else if (filter === Filter.WITHOUTDISCOUNT) {
+            } else if (filter === Filter.WITHOUTDISCOUNT) {
                 productData = productData.filter((item) => {
                     if (item.discount === "0") {
                         return item;
@@ -56,17 +80,25 @@ const fetchProducts = async (url, quantity = 1, filter = Filter.ALL) => {
                 });
             }
         }
-        const randomProducts = generateUniqueRandomNumbers(quantity, productData.length - 1);
+
+        const randomProducts = generateUniqueRandomNumbers(
+            quantity,
+            productData.length - 1
+        );
         if (!randomProducts) {
-            throw new Error(`generateUniqueRandomNumbers error arg = (quantity = ${quantity}, productData.length - 1 = ${productData.length - 1})`);
+            throw new Error(
+                `generateUniqueRandomNumbers error arg = (quantity = ${quantity}, productData.length - 1 = ${
+                    productData.length - 1
+                })`
+            );
         }
         const productsArr = randomProducts.map((i) => {
             return productData[i];
         });
         return productsArr;
-    }
-    catch (error) {
+    } catch (error) {
         console.error("fetch error", error);
     }
 };
+
 export default fetchProducts;

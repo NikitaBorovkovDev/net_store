@@ -2,8 +2,14 @@ import PropTypes from "prop-types";
 import clsx from "clsx";
 
 import "./buttonOutline.scss";
+import React from "react";
 
-const ButtonOutline = (props) => {
+type Props = {
+    children: string | JSX.Element;
+    addedClasses: string;
+};
+
+const ButtonOutline = (props: Props) => {
     return (
         <button className={clsx("btn btn-outline ", props.addedClasses)}>
             <span className="btn__text btn__text-outline">
